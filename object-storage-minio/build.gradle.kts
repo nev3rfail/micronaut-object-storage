@@ -5,7 +5,7 @@ plugins {
 dependencies {
     api(projects.objectStorageCore)
     api(mn.micronaut.aws.sdk.v2)
-    api(libs.amazon.awssdk.s3)
+    api("io.minio:minio:8.5.3")
 
     implementation(platform(mn.micronaut.aws.bom))
     annotationProcessor(mn.micronaut.validation)

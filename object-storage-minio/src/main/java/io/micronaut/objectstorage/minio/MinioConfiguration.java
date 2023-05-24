@@ -24,7 +24,7 @@ import io.micronaut.objectstorage.configuration.ObjectStorageConfiguration;
 
 import javax.validation.constraints.Pattern;
 
-import static io.micronaut.objectstorage.minio.AwsS3Configuration.PREFIX;
+import static io.micronaut.objectstorage.minio.MinioConfiguration.PREFIX;
 
 /**
  * AWS object storage configuration properties.
@@ -34,7 +34,7 @@ import static io.micronaut.objectstorage.minio.AwsS3Configuration.PREFIX;
  */
 @EachProperty(PREFIX)
 @Introspected
-public class AwsS3Configuration extends AbstractObjectStorageConfiguration {
+public class MinioConfiguration extends AbstractObjectStorageConfiguration {
 
     /**
      * Configuration Prefix ending.
@@ -58,7 +58,7 @@ public class AwsS3Configuration extends AbstractObjectStorageConfiguration {
      *
      * @param name Bean Qualifier name
      */
-    public AwsS3Configuration(@Parameter String name) {
+    public MinioConfiguration(@Parameter String name) {
         super(name);
     }
 

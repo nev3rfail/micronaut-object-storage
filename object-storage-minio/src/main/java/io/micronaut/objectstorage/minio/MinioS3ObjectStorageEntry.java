@@ -17,8 +17,8 @@ package io.micronaut.objectstorage.minio;
 
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.objectstorage.ObjectStorageEntry;
-import software.amazon.awssdk.core.ResponseInputStream;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import io.minio.GetObjectResponse;
+import io.minio.StatObjectResponse;
 
 import java.io.InputStream;
 import java.util.Collections;
@@ -31,17 +31,21 @@ import java.util.Optional;
  * @author Pavol Gressa
  * @since 1.0
  */
-public class AwsS3ObjectStorageEntry implements ObjectStorageEntry<GetObjectResponse> {
+public class MinioS3ObjectStorageEntry implements ObjectStorageEntry<GetObjectResponse> {
 
     @NonNull
     private final String key;
 
     @NonNull
-    private final ResponseInputStream<GetObjectResponse> responseInputStream;
+    private final GetObjectResponse responseInputStream;
 
-    public AwsS3ObjectStorageEntry(@NonNull String key,
-                                   @NonNull ResponseInputStream<GetObjectResponse> responseInputStream) {
+    @NonNull final StatObjectResponse properties;
+
+    public MinioS3ObjectStorageEntry(@NonNull String key,
+                                     @NonNull GetObjectResponse responseInputStream) {
         this.responseInputStream = responseInputStream;
+        //TODO: what should be the 4th parameter here?
+        this.properties = new StatObjectResponse(responseInputStream.headers(), responseInputStream.bucket(), responseInputStream.region(), responseInputStream.object());
         this.key = key;
     }
 
@@ -60,18 +64,18 @@ public class AwsS3ObjectStorageEntry implements ObjectStorageEntry<GetObjectResp
     @NonNull
     @Override
     public GetObjectResponse getNativeEntry() {
-        return responseInputStream.response();
+        return responseInputStream;
     }
 
     @NonNull
     @Override
     public Map<String, String> getMetadata() {
-        return Collections.unmodifiableMap(responseInputStream.response().metadata());
+        return Collections.unmodifiableMap(this.properties.userMetadata());
     }
 
     @NonNull
     @Override
     public Optional<String> getContentType() {
-        return Optional.ofNullable(responseInputStream.response().contentType());
+        return Optional.ofNullable(properties.contentType());
     }
 }
