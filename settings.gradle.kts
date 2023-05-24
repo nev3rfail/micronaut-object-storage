@@ -2,6 +2,7 @@ import io.micronaut.build.MicronautBuildSettingsExtension
 
 pluginManagement {
     repositories {
+        maven { url = uri("https://repo.grails.org/grails/core") }
         gradlePluginPortal()
         mavenCentral()
     }
@@ -23,6 +24,7 @@ include("object-storage-aws")
 include("object-storage-azure")
 include("object-storage-gcp")
 include("object-storage-oracle-cloud")
+include("object-storage-minio")
 
 include("doc-examples:example-java")
 include("doc-examples:example-groovy")
