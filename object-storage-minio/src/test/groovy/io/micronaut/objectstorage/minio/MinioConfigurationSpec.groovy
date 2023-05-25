@@ -1,4 +1,4 @@
-package io.micronaut.objectstorage.aws
+package io.micronaut.objectstorage.minio
 
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.Property
@@ -6,7 +6,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.inject.qualifiers.Qualifiers
 import io.micronaut.objectstorage.ObjectStorageOperations
-import io.micronaut.objectstorage.minio.AwsS3Configuration
+import io.micronaut.objectstorage.minio.MinioConfiguration
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -18,13 +18,13 @@ import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
-@Property(name = "micronaut.object-storage.aws.pictures.bucket", value = "pictures-bucket")
-@Property(name =  "micronaut.object-storage.aws.logos.bucket", value = "logos-bucket")
+@Property(name = "micronaut.object-storage.minio.pictures.bucket", value = "pictures-bucket")
+@Property(name =  "micronaut.object-storage.minio.logos.bucket", value = "logos-bucket")
 @Property(name = "spec.name", value = SPEC_NAME)
 @MicronautTest(startApplication = false)
-class AwsS3ConfigurationSpec extends Specification {
+class MinioConfigurationSpec extends Specification {
 
-    public static final String SPEC_NAME = 'AwsS3ConfigurationSpec'
+    public static final String SPEC_NAME = 'MinioConfigurationSpec'
 
     @Inject
     BeanContext beanContext
@@ -33,10 +33,10 @@ class AwsS3ConfigurationSpec extends Specification {
         expect:
         beanContext.containsBean(ObjectStorageOperations, Qualifiers.byName("pictures"))
         beanContext.containsBean(ObjectStorageOperations, Qualifiers.byName("logos"))
-        beanContext.containsBean(AwsS3Configuration, Qualifiers.byName("pictures"))
+        beanContext.containsBean(MinioConfiguration, Qualifiers.byName("pictures"))
 
         when:
-        AwsS3Configuration awsS3Configuration = beanContext.getBean(AwsS3Configuration, Qualifiers.byName("pictures"))
+        MinioConfiguration awsS3Configuration = beanContext.getBean(MinioConfiguration, Qualifiers.byName("pictures"))
 
         then:
         'pictures' == awsS3Configuration.name
@@ -50,7 +50,7 @@ class AwsS3ConfigurationSpec extends Specification {
         MockService service = beanContext.getBean(MockService)
 
         when:
-        AwsS3Configuration configuration = new AwsS3Configuration("foo")
+        MinioConfiguration configuration = new MinioConfiguration("foo")
         configuration.bucket = bucketName
         service.validate(configuration)
 
@@ -75,7 +75,7 @@ class AwsS3ConfigurationSpec extends Specification {
         MockService service = beanContext.getBean(MockService)
 
         when:
-        AwsS3Configuration configuration = new AwsS3Configuration("foo")
+        MinioConfiguration configuration = new MinioConfiguration("foo")
         configuration.bucket = 'aaaaa'
         service.validate(configuration)
 
@@ -84,14 +84,14 @@ class AwsS3ConfigurationSpec extends Specification {
     }
 
     static interface MockService {
-        void validate(@NonNull @NotNull @Valid AwsS3Configuration configuration);
+        void validate(@NonNull @NotNull @Valid MinioConfiguration configuration);
     }
 
     @Singleton
     @Requires(property = "spec.name", value = SPEC_NAME)
     static class DefaultMockService implements MockService {
         @Override
-        void validate(@NonNull @NotNull @Valid AwsS3Configuration configuration) {
+        void validate(@NonNull @NotNull @Valid MinioConfiguration configuration) {
 
         }
     }
