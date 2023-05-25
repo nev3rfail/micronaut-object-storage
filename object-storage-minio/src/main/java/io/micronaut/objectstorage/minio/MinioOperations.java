@@ -189,7 +189,7 @@ public class MinioOperations implements ObjectStorageOperations<
                         .bucket(configuration.getBucket()).object(sourceKey).build()
                 )
                 .bucket(configuration.getBucket())
-                .object(sourceKey)
+                .object(destinationKey)
                 .build());
         } catch (ServerException | InternalException | IOException | XmlParserException |
                  InvalidResponseException | InvalidKeyException | NoSuchAlgorithmException |
@@ -204,7 +204,7 @@ public class MinioOperations implements ObjectStorageOperations<
      * @return A Minio's {@link PutObjectArgs.Builder} from a Micronaut's {@link UploadRequest}.
      */
     protected PutObjectArgs.Builder getRequestBuilder(@NonNull UploadRequest request) {
-        PutObjectArgs.Builder builder = PutObjectArgs.builder()
+        PutObjectArgs.Builder builder = PutObjectArgs.builder().bucket(configuration.getBucket())
             .object(request.getKey());
         request.getContentType().ifPresent(builder::contentType);
         Optional<Long> size = request.getContentSize();
