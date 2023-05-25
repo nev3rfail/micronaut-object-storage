@@ -39,7 +39,7 @@ public class MinioConfiguration extends AbstractObjectStorageConfiguration {
     /**
      * Configuration Prefix ending.
      */
-    public static final String NAME = "aws";
+    public static final String NAME = "minio";
 
     /**
      * Configuration Prefix.
